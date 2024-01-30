@@ -20,17 +20,20 @@ admin_decorators = [login_required, user_passes_test(lambda u: u.is_superuser)]
 
 @method_decorator(admin_decorators, name='dispatch')
 class DashboardView(TemplateView):
-    """
-    Registrations: Today, Month, Year (PAID/UNPAID)
-    Subscriptions: Today, Month, Year (TYPES)
-    Withdrawals  : Today, Month, Year (CALCULATE)
-    """
     template_name = 'admins/dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-        # context = calculate_statistics(context)
-        # initialization(init=False, mid=False, end=False)
+        events = Event.objects.all()
+        running_events = Event.objects.filter(status='published')
+
+        context['events_running'] = running_events
+        context['e_total'] = events.count()
+        context['e_pending'] = events.filter(status='draft').count()
+        context['e_running'] = running_events.count()
+        context['e_completed'] = events.filter(status='completed').count()
+        context['e_cancelled'] = events.filter(status='cancelled').count()
+
         return context
 
 
@@ -110,8 +113,6 @@ class EventListView(ListView):
         context = super(EventListView, self).get_context_data(**kwargs)
         _filter = EventFilter(self.request.GET, queryset=self.queryset)
         context['filter_form'] = _filter.form
-
-        Event.objects.all()[0].participant_set.count()
 
         paginator = Paginator(_filter.qs, 50)
         page_number = self.request.GET.get('page')

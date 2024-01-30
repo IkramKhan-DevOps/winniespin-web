@@ -33,7 +33,14 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="topnav-pages">
                             <a href="{% url 'admins:event-list' %}" class="dropdown-item">Events</a>
+                            <a href="{% url 'admins:event-add' %}" class="dropdown-item">Add New</a>
                         </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link dropdown-toggle arrow-none" href="/admin/">
+                            <i class="fa fa-shield-virus mr-2"></i>Root access
+                        </a>
                     </li>
 
 

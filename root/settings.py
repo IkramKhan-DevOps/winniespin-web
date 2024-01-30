@@ -33,6 +33,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 INSTALLED_APPS = [
+
     # DJANGO APPS
     'django.contrib.admin',
     'django.contrib.auth',

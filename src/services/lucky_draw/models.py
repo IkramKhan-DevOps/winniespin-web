@@ -25,7 +25,7 @@ class Event(models.Model):
         max_length=25, choices=EVENT_STATUS_CHOICES, default=EVENT_STATUS_CHOICES[0][0],
         help_text="[draft = not visible, published = visible online, completed = event ended]"
     )
-    spun_on = models.DateTimeField(help_text="Spun on", null=True, blank=True)
+    spun_on = models.DateTimeField(help_text="Spin/Lucky draw date and time", null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
@@ -42,14 +42,6 @@ class Participant(models.Model):
 
     class Meta:
         unique_together = ('token_number', 'event')
-
-    def clean(self):
-        if self.event.status == 'completed':
-            raise ValidationError(
-                f"This event {self.event.name} is completed, "
-                f"You can't add/update participants records now"
-            )
-        super().clean()
 
     def __str__(self):
         return self.token_number

@@ -21,12 +21,12 @@
                 <div class="card-body">
 
                     {# IMAGE DIV #}
-                    <div class="text-center">
+                    <div class="text-center mb-4">
                         {% if user.profile_image %}
                             <img class="rounded-circle" src="{{ user.profile_image.url }}" height="150px"
                                  alt="user-image">
                         {% else %}
-                            <img class="rounded-circle" src="{% static 'core/images/base/no-user.png' %}"
+                            <img class="rounded-circle" src="https://placehold.co/100"
                                  height="150px" alt="no-user-image">
                         {% endif %}
                     </div>
@@ -78,7 +78,11 @@
                             <p class="mb-0 text-center h3"><i class="fa fa-user-edit"></i></p>
                             <p class="mb-0 text-center h5">Profile</p>
                             <p class="mb-0 text-center">
-                                <a href="{% url 'admins:user-update' user.pk %}">Update</a>
+                                <a href="{% url 'admins:user-update' user.pk %}">
+                                    <b>
+                                        Update
+                                    </b>
+                                </a>
                             </p>
                         </div>
 
@@ -86,7 +90,9 @@
                             <p class="mb-0 text-center h3"><i class="fa fa-user-lock"></i></p>
                             <p class="mb-0 text-center h5">Password</p>
                             <p class="mb-0 text-center text-danger">
-                                <a href="{% url 'admins:user-password-reset-view' user.pk %}">Change</a>
+                                <a href="{% url 'admins:user-password-reset-view' user.pk %}">
+                                    <b>Change</b>
+                                </a>
                             </p>
                         </div>
                     </div>

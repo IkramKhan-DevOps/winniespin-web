@@ -40,6 +40,11 @@
                         {{ form|crispy }}
                         <div class="">
                             <button type="submit" class="btn btn-primary">Submit</button>
+                            {% if object %}
+                                <a class="btn btn-danger" href="{% url 'admins:event-delete' object.pk %}">
+                                    <i class="fa fa-trash"></i> Remove
+                                </a>
+                            {% endif %}
                         </div>
 
                     </form>
@@ -52,12 +57,12 @@
 {% endblock %}
 
 {% block js_code %}
-	<script>
-    $(document).ready(function () {
-        $('#id_spun_on').attr('type', 'datetime-local');
-        $('#id_event_type').addClass("form-control");
-        $('#id_status').addClass("form-control");
-    });
+    <script>
+        $(document).ready(function () {
+            $('#id_spun_on').attr('type', 'datetime-local');
+            $('#id_event_type').addClass("form-control");
+            $('#id_status').addClass("form-control");
+        });
     </script>
 {% endblock %}
 

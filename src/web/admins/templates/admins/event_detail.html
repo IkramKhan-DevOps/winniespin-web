@@ -9,6 +9,7 @@
 
 {% block content %}
 
+    {# GO BACK #}
     <div class="row">
         <div class="col-sm-12">
             <p>
@@ -19,6 +20,7 @@
         </div>
     </div>
 
+    {# MAIN #}
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -26,9 +28,10 @@
 
                     {# TOP DETAILS #}
                     <div class="text-center mt-2">
-                        <h5 class="mb-0">
-                            {{ object.name }} <i class="fa fa-check-circle text-success"></i>
-                        </h5>
+                        <img src="https://placehold.co/200?text=E" height="150" class="rounded-circle border p-1">
+                        <h3 class="mt-4">
+                            <b>{{ object.name }}</b>
+                        </h3>
                         <p class="fw-light text-muted mb-0">{{ object.description }}</p>
                     </div>
 
@@ -57,7 +60,7 @@
                             </p>
                         </div>
                         <div class="col text-center">
-                            <p class="mb-0 text-center h3"><i class="mdi mdi-alarm"></i></p>
+                            <p class="mb-0 text-center h3"><i class="bx bx-bell bx-tada"></i></p>
                             <p class="mb-0 text-center h5">Spun On</p>
                             <p class="mb-0 text-center">
                                 {{ object.spun_on.date }}<br>
@@ -75,7 +78,7 @@
                         <div class="col text-center">
                             <p class="mb-0 text-center h3"><i class="mdi mdi-security"></i></p>
                             <p class="mb-0 text-center h5">Participants</p>
-                            <p class="mb-0 text-center h4">
+                            <p class="mb-0 text-center h1">
                                 {{ object.participant_set.count }}
                             </p>
                         </div>
@@ -95,6 +98,55 @@
         </div>
     </div>
 
+
+    {# OTHER #}
+    <div class="row">
+
+        {# PARTICIPANTS #}
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <h5 class="mb-0">Participants</h5>
+                </div>
+                <div class="card-body">
+
+                    {% if object.participant_set.count > 0 %}
+                        {% for p in object.participant_set.all %}
+                            <span class="badge bg-soft-success text-success p-1 m-1" style="font-size: 15px;">
+                            {{ p }}
+                        </span>
+                        {% endfor %}
+                    {% else %}
+                        <p class="mb-0 text-danger"><b>No participants added yet</b></p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        {# RESULTS #}
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <h5 class="mb-0">Results</h5>
+                </div>
+                <div class="card-body">
+                    {% if object.status != 'complete' %}
+                        <div class="text-center">
+                            <img src="{% static 'animate.gif' %}" height="150" width="auto" alt="animate-winner">
+                            <div>
+                                <h5>Token ID!</h5>
+                                <h2>0010001001</h2>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="mb-0 text-danger"><b>This event isn't spurned yet.</b></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 {% endblock %}
 
