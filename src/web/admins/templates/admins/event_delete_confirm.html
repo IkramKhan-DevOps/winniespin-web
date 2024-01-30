@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load core_tags %}
+
+{% block subtitle %}
+    {{ object.name }}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <p>
+                <a href="{% url 'admins:event-detail' object.pk %}">
+                    <i class="fa fa-arrow-left"></i> back to {{ object.name }}
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border border-danger">
+                <div class="card-body">
+
+                    <p class="text-danger">
+                        Are you sure you want to delete {{ object }} permanently? There is no way to reverse this
+                        action.
+                    </p>
+
+                    <form method="post">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fa fa-trash"></i> Delete Permanently
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+

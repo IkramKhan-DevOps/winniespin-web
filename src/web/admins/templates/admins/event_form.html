@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block subtitle %}
+    {% if object %}
+        Update {{ object.name }}
+    {% else %}
+        Add New
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <p>
+                {% if object %}
+                    <a href="{% url 'admins:event-detail' object.id %}">
+                        <i class="fa fa-arrow-left"></i> back to object.name
+                    </a>
+                {% else %}
+                    <a href="{% url 'admins:event-list' %}">
+                        <i class="fa fa-arrow-left"></i> back to events
+                    </a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-2">
+                <div class="card-body">
+
+                    <form method="post" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+	<script>
+    $(document).ready(function () {
+        $('#id_spun_on').attr('type', 'datetime-local');
+        $('#id_event_type').addClass("form-control");
+        $('#id_status').addClass("form-control");
+    });
+    </script>
+{% endblock %}
+
+
+

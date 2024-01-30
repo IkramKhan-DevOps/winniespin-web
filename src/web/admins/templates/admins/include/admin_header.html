@@ -12,7 +12,7 @@
                     </li>
 
 
-                    {# Apps #}
+                    {# USERS #}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-pages" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -23,6 +23,20 @@
                             <a href="{% url 'admins:user-list' %}" class="dropdown-item">Users</a>
                         </div>
                     </li>
+
+                    {# EVENTS #}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-pages" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bx bx-user mr-2"></i>Events
+                            <div class="arrow-down"></div>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="topnav-pages">
+                            <a href="{% url 'admins:event-list' %}" class="dropdown-item">Events</a>
+                        </div>
+                    </li>
+
+
                 </ul>
             </div>
         </nav>

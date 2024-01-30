@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load core_tags %}
+
+{% block subtitle %}
+    Events List
+{% endblock %}
+
+{% block page_heading %}
+    <div class="text-right">
+        <a class="btn btn-primary" href="{% url 'admins:event-add' %}">
+            ADD NEW
+        </a>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <form method="get">
+                <div class="input-group mb-3">
+                    {{ filter_form }}
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-hover">
+                        {% if object_list %}
+                            <thead class="border-bottom">
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Participants</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>-</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            {% for object in object_list %}
+                                <tr>
+                                    <td>{{ object.name }}</td>
+                                    <td>
+                                        <h3 class="text-danger"><i class="fa fa-hat-cowboy"></i></h3>
+                                    </td>
+                                    <td><h3>{{ object.participant_set.count }}</h3></td>
+                                    <td><h3>{{ object.get_status_display }}</h3></td>
+                                    <td>
+                                        <b>Spurned: </b>{{ object.spun_on }}<br>
+                                        <b>Created: </b>{{ object.created_on }}
+                                    </td>
+                                    <td>
+                                        <b>
+                                            <a href="{% url 'admins:event-detail' object.id %}">
+                                                <i class="fa fa-eye"></i> view
+                                            </a>
+                                        </b>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        {% else %}
+                            <th class="text-danger">No users data available.</th>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mt-4">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url page_obj.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url page_obj.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+
+            $('label').hide();
+            $('input').addClass('form-control');
+            $('select').addClass('form-control');
+
+        });
+    </script>
+{% endblock %}
+
+

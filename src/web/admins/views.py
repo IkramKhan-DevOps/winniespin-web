@@ -7,12 +7,13 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import (
-    TemplateView, ListView, DetailView, UpdateView
+    TemplateView, ListView, DetailView, UpdateView, CreateView, DeleteView
 )
 
+from src.services.lucky_draw.models import Event
 # from faker_data import initialization
 from src.services.users.models import User
-from src.web.admins.filters import UserFilter
+from src.web.admins.filters import UserFilter, EventFilter
 
 admin_decorators = [login_required, user_passes_test(lambda u: u.is_superuser)]
 
@@ -94,3 +95,63 @@ class UserPasswordResetView(View):
             form.save(commit=True)
             messages.success(request, f"{user.get_full_name()}'s password changed successfully.")
         return render(request, 'admins/admin_password_reset.html', {'form': form, 'object': user})
+
+
+"""  """
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class EventListView(ListView):
+    queryset = Event.objects.all()
+    template_name = 'admins/event_list.html'
+    paginate_by = 50
+
+    def get_context_data(self, **kwargs):
+        context = super(EventListView, self).get_context_data(**kwargs)
+        _filter = EventFilter(self.request.GET, queryset=self.queryset)
+        context['filter_form'] = _filter.form
+
+        Event.objects.all()[0].participant_set.count()
+
+        paginator = Paginator(_filter.qs, 50)
+        page_number = self.request.GET.get('page')
+        user_page_object = paginator.get_page(page_number)
+
+        context['object_list'] = user_page_object
+        return context
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class EventUpdateView(UpdateView):
+    model = Event
+    fields = '__all__'
+    template_name = 'admins/event_form.html'
+
+    def get_success_url(self):
+        return reverse('admins:event-detail', kwargs={'pk': self.object.id})
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class EventCreateView(CreateView):
+    model = Event
+    fields = '__all__'
+    template_name = 'admins/event_form.html'
+
+    def get_success_url(self):
+        return reverse('admins:event-detail', kwargs={'pk': self.object.id})
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'admins/event_detail.html'
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class EventDeleteView(DeleteView):
+    model = Event
+    template_name = 'admins/event_delete_confirm.html'
+
+    def get_success_url(self):
+        return reverse('admins:event-list')
+

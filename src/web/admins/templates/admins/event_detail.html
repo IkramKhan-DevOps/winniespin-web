@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load core_tags %}
+
+{% block subtitle %}
+    {{ object.name }}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <p>
+                <a href="{% url 'admins:event-list' %}">
+                    <i class="fa fa-arrow-left"></i> Go Back
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+
+                    {# TOP DETAILS #}
+                    <div class="text-center mt-2">
+                        <h5 class="mb-0">
+                            {{ object.name }} <i class="fa fa-check-circle text-success"></i>
+                        </h5>
+                        <p class="fw-light text-muted mb-0">{{ object.description }}</p>
+                    </div>
+
+                    {# DETAILS #}
+                    <div class="row mt-4">
+                        <div class="col">
+                            <p class="mb-0 text-center h3"><i class="mdi mdi-email"></i></p>
+                            <p class="mb-0 text-center h5">Type</p>
+                            <p class="mb-0 text-center">{{ object.get_event_type_display }}</p>
+                        </div>
+                        <div class="col">
+                            <p class="mb-0 text-center h3">
+                                {% if object.status == 'draft' %}
+                                    <i class="mdi mdi-exclamation-thick text-warning"></i>
+                                {% elif object.status == 'published' %}
+                                    <i class="bx bx-loader bx bx-spin text-primary"></i>
+                                {% elif object.status == 'completed' %}
+                                    <i class="fa fa-check-circle text-success"></i>
+                                {% else %}
+                                    <i class="fa fa-times-circle text-danger"></i>
+                                {% endif %}
+                            </p>
+                            <p class="mb-0 text-center h5">Status</p>
+                            <p class="mb-0 text-center">
+                                ({{ object.get_status_display }})
+                            </p>
+                        </div>
+                        <div class="col text-center">
+                            <p class="mb-0 text-center h3"><i class="mdi mdi-alarm"></i></p>
+                            <p class="mb-0 text-center h5">Spun On</p>
+                            <p class="mb-0 text-center">
+                                {{ object.spun_on.date }}<br>
+                                {{ object.spun_on.time }}<br>
+                            </p>
+                        </div>
+                        <div class="col text-center">
+                            <p class="mb-0 text-center h3"><i class="mdi mdi-calendar"></i></p>
+                            <p class="mb-0 text-center h5">Created On</p>
+                            <p class="mb-0 text-center">
+                                {{ object.created_on.date }}<br>
+                                {{ object.created_on.time }}<br>
+                            </p>
+                        </div>
+                        <div class="col text-center">
+                            <p class="mb-0 text-center h3"><i class="mdi mdi-security"></i></p>
+                            <p class="mb-0 text-center h5">Participants</p>
+                            <p class="mb-0 text-center h4">
+                                {{ object.participant_set.count }}
+                            </p>
+                        </div>
+                        <div class="col text-center">
+                            <p class="mb-0 text-center h3"><i class="mdi mdi-security"></i></p>
+                            <p class="mb-0 text-center h5">Update</p>
+                            <p class="mb-0 text-center">
+                                <a href="{% url 'admins:event-update' object.id %}">
+                                    update
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
