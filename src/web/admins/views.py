@@ -156,3 +156,26 @@ class EventDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('admins:event-list')
 
+
+""" LUCKY DRAW """
+
+
+@method_decorator(admin_decorators, name="dispatch")
+class LuckyDrawView(TemplateView):
+    template_name = 'admins/lucky_draw.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        names = [
+            "John", "Emma", "Michael", "Sophia", "William", "Isabella", "James", "Olivia", "Alexander", "Amelia",
+            "Benjamin", "Charlotte", "Daniel", "Mia", "Matthew", "Harper", "Joseph", "Evelyn", "David", "Abigail",
+            "Henry", "Emily", "Andrew", "Elizabeth", "Samuel", "Avery", "Gabriel", "Sofia", "Jackson", "Chloe",
+            "Anthony",
+            "Ella", "Christopher", "Grace", "Emily", "Aria", "Madison", "Scarlett", "Joshua", "Lily", "Aiden", "Mila",
+            "Mason"
+        ]
+        context['names'] = names
+        context['seconds'] = 1 * 1000
+        return context
+
+

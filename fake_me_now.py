@@ -50,70 +50,70 @@ def load_events_and_participants():
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 4",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 5",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 6",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 7",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 8",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 9",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 10",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 11",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 12",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
             "spun_on": timezone.now(),
         },
         {
-            "name": "Lottery 3",
+            "name": "Lottery 13",
             "description": "Yet another lottery event with cash prize for the winner.",
             "event_type": event_type,
             "status": event_status,
@@ -138,8 +138,8 @@ def load_events_and_participants():
             )
 
             # Generating participants for the event
-            for _ in range(10):  # Generating 100 participants for each event
-                token_number = fake.uuid4()  # Generate a random UUID as token number
+            for _ in range(10):
+                token_number = fake.uuid4()
                 Participant.objects.create(
                     token_number=token_number,
                     event=event,

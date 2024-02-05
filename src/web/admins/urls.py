@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     DashboardView,
     UserListView, UserPasswordResetView, UserDetailView, UserUpdateView,
-    EventListView, EventDetailView, EventDeleteView, EventUpdateView, EventCreateView
+    EventListView, EventDetailView, EventDeleteView, EventUpdateView, EventCreateView, LuckyDrawView
 )
 
 
@@ -21,5 +21,7 @@ urlpatterns = [
     path('event/<int:pk>/', EventDetailView.as_view(), name='event-detail'),
     path('event/<int:pk>/update/', EventUpdateView.as_view(), name='event-update'),
     path('event/<int:pk>/delete/', EventDeleteView.as_view(), name='event-delete'),
+
+    path('lucky-draw/', LuckyDrawView.as_view(), name="lucky-draw")
 
 ]

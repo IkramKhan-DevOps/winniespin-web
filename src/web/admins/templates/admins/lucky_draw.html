@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load core_tags %}
+
+{% block subtitle %}
+    {{ user.username }}
+{% endblock %}
+
+{% block base_top_nav %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="row justify-content-center">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <p class="card-title mb-0">Spin starts in ...</p>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="cols">
+                            <p class="h1 mb-0" style="text-shadow: grey;" id="spin-data">name</p>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center mt-4">
+                        <div class="cols">
+                            <button class="btn btn-lg btn-primary" id="spin-btn">
+                                <i class="fa fa-spin fa fa-spinner"></i> Spin Now.
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <script src="{% static 'confetti.js' %}"></script>
+{% endblock %}
+
+{% block js_code %}
+    <script>
+
+        $(document).ready(function () {
+
+            celebrate_start();
+
+            $('#spin-btn').click(function () {
+                spin_now();
+            });
+
+            function spin_now() {
+                let names = {{ names|safe }};
+                let endTime = Date.now() + {{ seconds }};
+
+                function updateText() {
+                    let randomIndex = Math.floor(Math.random() * names.length);
+                    $("#spin-data").text(names[randomIndex]);
+                    if (Date.now() < endTime) {
+                        setTimeout(updateText, 50);
+                    } else {
+                        celebrate_sides();
+                        celebrate();
+                    }
+                }
+
+                // Start updating the text
+                updateText();
+            }
+        });
+
+    </script>
+
+{% endblock %}
