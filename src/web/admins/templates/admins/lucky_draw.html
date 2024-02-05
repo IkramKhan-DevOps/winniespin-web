@@ -12,11 +12,17 @@
 
 {% block content %}
 
+    <div class="row justify-content-center mb-4">
+        <div class="col-sm-12 text-center">
+            <img src="{% static 'core/images/logos/logo.png' %}" height="100">
+        </div>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-sm-8">
             <div class="card">
                 <div class="card-body border-bottom">
-                    <p class="card-title mb-0">Spin starts in ...</p>
+                    <p class="card-title mb-0"># 1001</p>
                 </div>
                 <div class="card-body">
                     <div class="row justify-content-center">
@@ -72,7 +78,6 @@
                     }
                 }
 
-                // Start updating the text
                 updateText();
             }
         });

@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AdminPasswordChangeForm
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -10,7 +10,7 @@ from django.views.generic import (
     TemplateView, ListView, DetailView, UpdateView, CreateView, DeleteView
 )
 
-from src.services.lucky_draw.models import Event
+from src.services.lucky_draw.models import Event, Participant, Result
 # from faker_data import initialization
 from src.services.users.models import User
 from src.web.admins.filters import UserFilter, EventFilter
@@ -161,21 +161,26 @@ class EventDeleteView(DeleteView):
 
 
 @method_decorator(admin_decorators, name="dispatch")
-class LuckyDrawView(TemplateView):
+class LuckyDrawView(View):
     template_name = 'admins/lucky_draw.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        names = [
-            "John", "Emma", "Michael", "Sophia", "William", "Isabella", "James", "Olivia", "Alexander", "Amelia",
-            "Benjamin", "Charlotte", "Daniel", "Mia", "Matthew", "Harper", "Joseph", "Evelyn", "David", "Abigail",
-            "Henry", "Emily", "Andrew", "Elizabeth", "Samuel", "Avery", "Gabriel", "Sofia", "Jackson", "Chloe",
-            "Anthony",
-            "Ella", "Christopher", "Grace", "Emily", "Aria", "Madison", "Scarlett", "Joshua", "Lily", "Aiden", "Mila",
-            "Mason"
-        ]
-        context['names'] = names
+    def get(self, request, pk, *args, **kwargs):
+        context = {}
+
+        obj = get_object_or_404(Event.objects.filter(status__in=['draft', 'published']), pk=pk)
+        names = Participant.objects.filter(event=obj).values_list('token_number', flat=True)
+        result, created = Result.objects.get_or_create(event=obj)
+
+        if not names:
+            messages.error(request, "No participants added to this event.")
+            return redirect("admins:event-detail", pk)
+
+        names = list(names)
+        winner = result.participant
+
+        context['names'] = list(names)
         context['seconds'] = 1 * 1000
-        return context
+
+        return render(request=request, template_name=self.template_name, context=context)
 
 

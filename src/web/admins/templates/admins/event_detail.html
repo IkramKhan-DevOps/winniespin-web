@@ -11,12 +11,15 @@
 
     {# GO BACK #}
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-6">
             <p>
                 <a href="{% url 'admins:event-list' %}">
                     <i class="fa fa-arrow-left"></i> Go Back
                 </a>
             </p>
+        </div>
+        <div class="col-sm-6 text-right">
+            <a href="/admin/lucky_draw/event/{{ object.id }}/change/"><i class="fa fa-edit"></i> Edit</a>
         </div>
     </div>
 
@@ -126,12 +129,12 @@
 
         {# RESULTS #}
         <div class="col-sm-4">
-            <div class="card">
+            <div class="card text-center">
                 <div class="card-body border-bottom">
                     <h5 class="mb-0">Results</h5>
                 </div>
                 <div class="card-body">
-                    {% if object.status != 'complete' %}
+                    {% if object.status == 'complete' %}
                         <div class="text-center">
                             <img src="{% static 'animate.gif' %}" height="150" width="auto" alt="animate-winner">
                             <div>
@@ -140,7 +143,16 @@
                             </div>
                         </div>
                     {% else %}
-                        <p class="mb-0 text-danger"><b>This event isn't spurned yet.</b></p>
+                        <h1 class="text-danger mb-0"><i class="fa fa-times"></i></h1>
+                        <p class="text-danger mb-0">
+                            <b>
+                                This event isn't spurned yet.
+                            </b>
+                        </p>
+                        <p class="mb-1">Click here to start/Spun</p>
+                        <a href="{% url 'admins:lucky-draw' object.id %}" class="btn btn-success">
+                            Spun Now
+                        </a>
                     {% endif %}
                 </div>
             </div>

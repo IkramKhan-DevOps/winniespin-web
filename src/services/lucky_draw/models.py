@@ -12,10 +12,36 @@ EVENT_STATUS_CHOICES = (
     ('cancelled', 'Cancelled')
 )
 
+SPUN_SPEED_CHOICES = (
+    ('10', '10'),
+    ('50', '50'),
+    ('100', '100'),
+    ('200', '200'),
+    ('500', '500'),
+)
+
+SPUN_TIME_CHOICES = (
+    ('10', '10'),
+    ('25', '25'),
+    ('50', '50'),
+    ('100', '100'),
+    ('250', '250'),
+    ('500', '500'),
+)
+
 
 class Event(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(help_text="Some description about this event")
+
+    spun_speed = models.CharField(
+        max_length=3, default=SPUN_SPEED_CHOICES[0][0],
+        choices=SPUN_SPEED_CHOICES, help_text="Speed to move over names"
+    )
+    spun_time = models.CharField(
+        max_length=3, default=SPUN_TIME_CHOICES[0][0],
+        choices=SPUN_TIME_CHOICES, help_text="Speed time took to move"
+    )
 
     event_type = models.CharField(
         max_length=25, choices=EVENT_TYPE_CHOICES, default=EVENT_TYPE_CHOICES[0][0],
@@ -26,6 +52,7 @@ class Event(models.Model):
         help_text="[draft = not visible, published = visible online, completed = event ended]"
     )
     spun_on = models.DateTimeField(help_text="Spin/Lucky draw date and time", null=True, blank=True)
+
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
@@ -49,7 +76,7 @@ class Participant(models.Model):
 
 class Result(models.Model):
     participant = models.ForeignKey(Participant, on_delete=models.SET_NULL, null=True, blank=True)
-    event = models.OneToOneField(Event, on_delete=models.CASCADE)
+    event = models.OneToOneField(Event, on_delete=models.CASCADE, unique=True)
 
     def __str__(self):
         return f'WINNER: {self.participant} > {self.event}'
