@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     DashboardView,
     UserListView, UserPasswordResetView, UserDetailView, UserUpdateView,
-    EventListView, EventDetailView, EventDeleteView, EventUpdateView, EventCreateView, LuckyDrawView
+    EventListView, EventDetailView, EventDeleteView, EventUpdateView, EventCreateView, LuckyDrawView, spin_json_view
 )
 
 
@@ -24,4 +24,8 @@ urlpatterns = [
 
     path('event/<int:pk>/spin/', LuckyDrawView.as_view(), name="lucky-draw")
 
+]
+
+urlpatterns += [
+    path('json/event/<str:event_id>/token_number/<str:token_number>/', spin_json_view, name='json-spin-view')
 ]

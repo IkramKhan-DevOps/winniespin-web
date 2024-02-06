@@ -9,6 +9,7 @@
 
 {% block content %}
 
+
     {# GO BACK #}
     <div class="row">
         <div class="col-sm-6">
@@ -131,15 +132,15 @@
         <div class="col-sm-4">
             <div class="card text-center">
                 <div class="card-body border-bottom">
-                    <h5 class="mb-0">Results</h5>
+                    <h5 class="mb-0">Winner</h5>
                 </div>
                 <div class="card-body">
-                    {% if object.status == 'complete' %}
+                    {% if object.status == 'completed' %}
                         <div class="text-center">
                             <img src="{% static 'animate.gif' %}" height="150" width="auto" alt="animate-winner">
                             <div>
                                 <h5>Token ID!</h5>
-                                <h2>0010001001</h2>
+                                <h2>{{ object.result.participant.token_number }}</h2>
                             </div>
                         </div>
                     {% else %}

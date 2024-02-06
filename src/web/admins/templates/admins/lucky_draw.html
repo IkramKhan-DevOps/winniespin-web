@@ -10,30 +10,28 @@
 
 {% endblock %}
 
-{% block content %}
+{% block only-body %}
 
-    <div class="row justify-content-center mb-4">
-        <div class="col-sm-12 text-center">
-            <img src="{% static 'core/images/logos/logo.png' %}" height="100">
-        </div>
-    </div>
-
-    <div class="row justify-content-center">
-        <div class="col-sm-8">
-            <div class="card">
-                <div class="card-body border-bottom">
-                    <p class="card-title mb-0"># 1001</p>
-                </div>
-                <div class="card-body">
+    <div class="account-pages my-5 pt-sm-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
                     <div class="row justify-content-center">
-                        <div class="cols">
-                            <p class="h1 mb-0" style="text-shadow: grey;" id="spin-data">name</p>
+                        <div class="cols text-center">
+                            <img src="{% static 'core/images/logos/logo.png' %}" height="100" class="mb-3">
+                            <p class="mb-0">EVENT #{{ object.id }}</p>
+                            <p class="h3 text-success mb-4">WinnieSpin (Lets Spin)</p>
+                            <p class="h1 mb-0 text-secondary"
+                               style="padding: 10px; text-shadow: grey; font-size: xxx-large; border: 10px solid lightgrey; border-radius: 10px;"
+                               id="spin-data">
+                                ||||||||||||||||
+                            </p>
                         </div>
                     </div>
 
                     <div class="row justify-content-center mt-4">
                         <div class="cols">
-                            <button class="btn btn-lg btn-primary" id="spin-btn">
+                            <button class="btn btn-lg btn-success" id="spin-btn">
                                 <i class="fa fa-spin fa fa-spinner"></i> Spin Now.
                             </button>
                         </div>
@@ -44,12 +42,18 @@
         </div>
     </div>
 
+    <script src="{% static 'core/libs/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'core/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'core/libs/metismenu/metisMenu.min.js' %}"></script>
+    <script src="{% static 'core/libs/simplebar/simplebar.min.js' %}"></script>
+    <script src="{% static 'core/libs/node-waves/waves.min.js' %}"></script>
 
-{% endblock %}
+    <!-- App js -->
+    <script src="{% static 'core/js/app.js' %}"></script>
 
-{% block js %}
     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
     <script src="{% static 'confetti.js' %}"></script>
+
 {% endblock %}
 
 {% block js_code %}
@@ -58,6 +62,9 @@
         $(document).ready(function () {
 
             celebrate_start();
+            let result = "{{ result }}";
+            let object_id = {{ object.id }};
+
 
             $('#spin-btn').click(function () {
                 spin_now();
@@ -73,14 +80,36 @@
                     if (Date.now() < endTime) {
                         setTimeout(updateText, 50);
                     } else {
+
+
+                        if (result !== "0") {
+                            $("#spin-data").text(result);
+                        }
+                        result = $("#spin-data").text();
+
                         celebrate_sides();
                         celebrate();
+                        $('#spin-btn').hide();
+
+                        save_to_records(result);
                     }
                 }
 
                 updateText();
             }
+
+            function save_to_records(token_number) {
+                $.post(
+                    "/admins/json/event/"+object_id+"/token_number/"+token_number+"/", {
+                        token_number: token_number,
+                    },
+                    function (data, status) {
+                        console.log(status);
+                        console.log(data);
+                    });
+            }
         });
+
 
     </script>
 

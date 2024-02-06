@@ -1,11 +1,13 @@
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AdminPasswordChangeForm
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import (
     TemplateView, ListView, DetailView, UpdateView, CreateView, DeleteView
 )
@@ -180,7 +182,50 @@ class LuckyDrawView(View):
 
         context['names'] = list(names)
         context['seconds'] = 1 * 1000
+        context['object'] = obj
+        context['result'] = winner.token_number if winner else 0
 
         return render(request=request, template_name=self.template_name, context=context)
 
 
+@csrf_exempt
+def spin_json_view(request, event_id, token_number):
+    message = "Something went wrong"
+    error = True
+
+    obj = get_object_or_404(Event.objects.filter(status__in=['draft', 'published']), pk=event_id)
+    participant = Participant.objects.filter(token_number=token_number, event=obj)
+
+    # YES: participant available with this token in this event
+    if participant:
+
+        # GET result for this event
+        participant = participant[0]
+        result, created = Result.objects.get_or_create(event=obj)
+        if result:
+
+            # IF result is missing
+            if not result.participant:
+
+                result.participant = participant
+                result.save()
+
+                error = False
+                message = "Results updated"
+
+            else:
+                error = False
+                message = "Already updated"
+
+            obj.status = "completed"
+            obj.save()
+
+        else:
+            message = "issue in result"
+    else:
+        message = "wrong token number"
+
+    return JsonResponse({
+        'success': error,
+        'message': message
+    })
