@@ -181,7 +181,7 @@ class LuckyDrawView(View):
         winner = result.participant
 
         context['names'] = list(names)
-        context['seconds'] = int(obj.spun_speed) * 1000 if obj.spun_speed else 10 * 1000
+        context['seconds'] = int(obj.spun_time) * 1000 if obj.spun_time else 10 * 1000
         context['speed'] = int(obj.spun_speed) if obj.spun_speed else 50
         context['object'] = obj
         context['result'] = winner.token_number if winner else 0

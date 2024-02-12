@@ -19,8 +19,8 @@
                                         <img src="{{ request.user.profile_image.url }}" alt=""
                                          class="avatar-md rounded-circle img-thumbnail">
                                     {% else %}
-                                        <img src="https://placehold.co/100" alt=""
-                                         class="avatar-md rounded-circle img-thumbnail">
+                                        <img src="{% static 'core/images/logos/logo.png' %}" alt=""
+                                         class="avatar-md rounded-circle img-thumbnail fa fa-spin">
                                     {% endif %}
 
                                 </div>
