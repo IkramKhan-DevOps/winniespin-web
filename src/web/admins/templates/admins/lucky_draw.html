@@ -6,6 +6,16 @@
     {{ user.username }}
 {% endblock %}
 
+{% block css %}
+    <style>
+
+        #countdown {
+            font-size: 36px; /* Adjust font size as needed */
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
 {% block base_top_nav %}
 
 {% endblock %}
@@ -20,16 +30,25 @@
                         <div class="cols text-center">
                             <img src="{% static 'core/images/logos/logo.png' %}" height="100" class="mb-3">
                             <p class="mb-0">EVENT #{{ object.id }}</p>
-                            <p class="h3 text-success mb-4">WinnieSpin (Lets Spin)</p>
-                            <p class="h1 mb-0 text-secondary"
-                               style="padding: 10px; text-shadow: grey; font-size: xxx-large; border: 10px solid lightgrey; border-radius: 10px;"
+                            <p class="h1 text-success mb-5">WinnieSpin</p>
+                            <p class="h1 mb-0 text-secondary text-shadow1"
+                               style="padding: 10px; text-shadow: grey; font-size: 90px; border: 10px solid darkgreen; border-radius: 10px;"
                                id="spin-data">
-                                ||||||||||||||||
+                                |||||||||||||||||||||||
                             </p>
                         </div>
                     </div>
 
-                    <div class="row justify-content-center mt-4">
+                    <div class="row justify-content-center mt-5 text-center">
+                        <div class="cols">
+                            <p class="mb-1 h5" id="countdown-head">Hold your breadth spinners!</p>
+                            <p class="h2 mb-0 text-danger" id="countdown" style="font-size: 50px">
+                                <i class="bx bx-alarm bx-tada"></i>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center mt-5" id="spin-btn-div">
                         <div class="cols">
                             <button class="btn btn-lg btn-success" id="spin-btn">
                                 <i class="fa fa-spin fa fa-spinner"></i> Spin Now.
@@ -62,8 +81,12 @@
         $(document).ready(function () {
 
             celebrate_start();
+            let countdown = $("#countdown");
+            let countdown_heading = $("#countdown-head");
+
             let result = "{{ result }}";
             let object_id = {{ object.id }};
+            let remainingTime = {{ seconds }} / 1000; // Convert milliseconds to seconds
 
 
             $('#spin-btn').click(function () {
@@ -71,6 +94,7 @@
             });
 
             function spin_now() {
+                $('#spin-btn-div').hide();
                 let names = {{ names|safe }};
                 let endTime = Date.now() + {{ seconds }};
 
@@ -78,10 +102,10 @@
                     let randomIndex = Math.floor(Math.random() * names.length);
                     $("#spin-data").text(names[randomIndex]);
                     if (Date.now() < endTime) {
-                        setTimeout(updateText, 50);
+                        remainingTime = Math.ceil((endTime - Date.now()) / 1000);
+                        countdown.text(`${remainingTime}`);
+                        setTimeout(updateText, {{ speed }});
                     } else {
-
-
                         if (result !== "0") {
                             $("#spin-data").text(result);
                         }
@@ -89,7 +113,8 @@
 
                         celebrate_sides();
                         celebrate();
-                        $('#spin-btn').hide();
+                        countdown_heading.text("🎊 We Found the Winner 🎉")
+                        countdown.text("Congratulations🥳")
 
                         save_to_records(result);
                     }
@@ -98,9 +123,10 @@
                 updateText();
             }
 
+
             function save_to_records(token_number) {
                 $.post(
-                    "/admins/json/event/"+object_id+"/token_number/"+token_number+"/", {
+                    "/admins/json/event/" + object_id + "/token_number/" + token_number + "/", {
                         token_number: token_number,
                     },
                     function (data, status) {

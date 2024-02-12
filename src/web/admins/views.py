@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -177,11 +178,11 @@ class LuckyDrawView(View):
             messages.error(request, "No participants added to this event.")
             return redirect("admins:event-detail", pk)
 
-        names = list(names)
         winner = result.participant
 
         context['names'] = list(names)
-        context['seconds'] = 1 * 1000
+        context['seconds'] = int(obj.spun_speed) * 1000 if obj.spun_speed else 10 * 1000
+        context['speed'] = int(obj.spun_speed) if obj.spun_speed else 50
         context['object'] = obj
         context['result'] = winner.token_number if winner else 0
 
@@ -217,7 +218,8 @@ def spin_json_view(request, event_id, token_number):
                 error = False
                 message = "Already updated"
 
-            obj.status = "completed"
+            # obj.status = "completed"
+            obj.spun_on = timezone.now()
             obj.save()
 
         else:

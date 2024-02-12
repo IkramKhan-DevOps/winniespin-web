@@ -33,7 +33,7 @@
                     {# TOP DETAILS #}
                     <div class="text-center mt-2">
                         <img src="https://placehold.co/200?text=E" height="150" class="rounded-circle border p-1">
-                        <h3 class="mt-4">
+                        <h3 class="mt-4 mb-0">
                             <b>{{ object.name }}</b>
                         </h3>
                         <p class="fw-light text-muted mb-0">{{ object.description }}</p>
@@ -44,7 +44,7 @@
                         <div class="col">
                             <p class="mb-0 text-center h3"><i class="mdi mdi-email"></i></p>
                             <p class="mb-0 text-center h5">Type</p>
-                            <p class="mb-0 text-center">{{ object.get_event_type_display }}</p>
+                            <p class="mb-0 text-center text-danger h5">{{ object.get_event_type_display }}</p>
                         </div>
                         <div class="col">
                             <p class="mb-0 text-center h3">
@@ -59,8 +59,29 @@
                                 {% endif %}
                             </p>
                             <p class="mb-0 text-center h5">Status</p>
-                            <p class="mb-0 text-center">
-                                ({{ object.get_status_display }})
+                            <p class="mb-0 text-center h5">
+                                {{ object.get_status_display }}
+                            </p>
+                        </div>
+                        <div class="col text-center">
+                            <p class="mb-0 text-center h3"><i class="bx bx-bell bx-tada"></i></p>
+                            <p class="mb-0 text-center h5">Spun Speed</p>
+                            <p class="mb-0 text-center h1">
+                                {{ object.spun_time }}<br>
+                            </p>
+                        </div>
+                        <div class="col text-center">
+                            <p class="mb-0 text-center h3"><i class="bx bx-bell bx-tada"></i></p>
+                            <p class="mb-0 text-center h5">Spun Time</p>
+                            <p class="mb-0 text-center h1">
+                                {{ object.spun_speed }}<br>
+                            </p>
+                        </div>
+                        <div class="col text-center">
+                            <p class="mb-0 text-center h3"><i class="mdi mdi-security"></i></p>
+                            <p class="mb-0 text-center h5">Participants</p>
+                            <p class="mb-0 text-center h1">
+                                {{ object.participant_set.count }}
                             </p>
                         </div>
                         <div class="col text-center">
@@ -77,13 +98,6 @@
                             <p class="mb-0 text-center">
                                 {{ object.created_on.date }}<br>
                                 {{ object.created_on.time }}<br>
-                            </p>
-                        </div>
-                        <div class="col text-center">
-                            <p class="mb-0 text-center h3"><i class="mdi mdi-security"></i></p>
-                            <p class="mb-0 text-center h5">Participants</p>
-                            <p class="mb-0 text-center h1">
-                                {{ object.participant_set.count }}
                             </p>
                         </div>
                     </div>
