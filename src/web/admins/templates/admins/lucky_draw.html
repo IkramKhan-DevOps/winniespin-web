@@ -22,25 +22,24 @@
 
 {% block only-body %}
 
-    <div class="account-pages my-5 pt-sm-5">
+    <div class="container text-center my-4">
+        <a href="{% url 'admins:event-detail' object.id %}">
+            <b>
+                <i class="bx bx-arrow-back"></i> back to {{ object.name }}
+            </b>
+        </a>
+    </div>
+
+    <div class="account-pages mx-5 py-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5">
 
-                    <div class="row justify-content-center mt-5">
-                        <div class="cols">
-                            <a href="{% url 'admins:event-detail' object.id %}">
-                                <b>
-                                    <i class="bx bx-arrow-back"></i> back to {{ object.name }}
-                                </b>
-                            </a>
-                        </div>
-                    </div>
-
 
                     <div class="row justify-content-center mt-4">
                         <div class="cols text-center">
-                            <img src="{% static 'core/images/logos/logo.png' %}" height="100" class="mb-3 fa fa-spin">
+                            <img src="{% static 'core/images/logos/logo.png' %}" height="100" class="mb-3"
+                                 id="spin-image">
                             <p class="mb-0">EVENT #{{ object.id }}</p>
                             <p class="h1 text-success mb-5">WinnieSpin</p>
                             <p class="h1 mb-0 text-secondary text-shadow1"
@@ -73,6 +72,9 @@
         </div>
     </div>
 
+    <audio id="tickle-audio" src="{% static 'tickle.mp3' %}" loop></audio>
+    <audio id="tickle-winner" src="{% static 'winner.mp3' %}" loop></audio>
+
     <script src="{% static 'core/libs/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'core/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'core/libs/metismenu/metisMenu.min.js' %}"></script>
@@ -95,6 +97,9 @@
             celebrate_start();
             let countdown = $("#countdown");
             let countdown_heading = $("#countdown-head");
+            let spin_image = $("#spin-image");
+            let tickle_audio = document.getElementById('tickle-audio');
+            let tickle_winner = document.getElementById('tickle-winner');
 
             let result = "{{ result }}";
             let object_id = {{ object.id }};
@@ -110,6 +115,8 @@
                 let names = {{ names|safe }};
                 let endTime = Date.now() + {{ seconds }};
 
+                spin_start();
+
                 function updateText() {
                     let randomIndex = Math.floor(Math.random() * names.length);
                     $("#spin-data").text(names[randomIndex]);
@@ -118,21 +125,38 @@
                         countdown.text(`${remainingTime}`);
                         setTimeout(updateText, {{ speed }});
                     } else {
-                        if (result !== "0") {
-                            $("#spin-data").text(result);
-                        }
-                        result = $("#spin-data").text();
 
-                        celebrate_sides();
-                        celebrate();
-                        countdown_heading.text("🎊 We Found the Winner 🎉")
-                        countdown.text("Congratulations🥳")
-
-                        save_to_records(result);
+                        spin_end();
                     }
                 }
 
                 updateText();
+            }
+
+            function spin_start() {
+                spin_image.addClass("fa fa-spin");
+                tickle_audio.play();
+            }
+
+            function spin_end() {
+
+                if (result !== "0") {
+                    $("#spin-data").text(result);
+                }
+                result = $("#spin-data").text();
+
+                tickle_audio.pause();
+                tickle_audio.currentTime = 0;
+                tickle_winner.play();
+
+                celebrate_sides();
+                celebrate();
+
+                spin_image.removeClass("fa fa-spin");
+                countdown_heading.text("🎊 We Found the Winner 🎉");
+                countdown.text("Congratulations🥳");
+
+                save_to_records(result);
             }
 
 
@@ -144,7 +168,8 @@
                     function (data, status) {
                         console.log(status);
                         console.log(data);
-                    });
+                    }
+                );
             }
         });
 

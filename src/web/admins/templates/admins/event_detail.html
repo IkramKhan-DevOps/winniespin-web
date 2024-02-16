@@ -20,12 +20,13 @@
             </p>
         </div>
         <div class="col-sm-6 text-right">
-            <a href="/admin/lucky_draw/event/{{ object.id }}/change/"><i class="fa fa-edit"></i> Edit</a>
+            <a class="btn btn-primary" href="/admin/lucky_draw/event/{{ object.id }}/change/"><i class="fa fa-edit"></i> Edit</a>
+            <a class="btn btn-danger" href="{% url 'admins:event-delete' object.id %}"><i class="fa fa-trash"></i> Delete</a>
         </div>
     </div>
 
     {# MAIN #}
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">

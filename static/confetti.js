@@ -1,5 +1,5 @@
 function celebrate_start() {
-    const duration = 15 * 1000,
+    const duration = 60 * 1000,
         animationEnd = Date.now() + duration;
 
     let skew = 1;
@@ -37,7 +37,7 @@ function celebrate_start() {
 }
 
 function celebrate_sides() {
-    const end = Date.now() + 15 * 1000;
+    const end = Date.now() + 60 * 1000;
 
     const colors = ["#bb0000", "#ffffff"];
 
@@ -65,7 +65,7 @@ function celebrate_sides() {
 }
 
 function celebrate() {
-    const duration = 15 * 1000,
+    const duration = 60 * 1000,
         animationEnd = Date.now() + duration,
         defaults = {startVelocity: 30, spread: 360, ticks: 60, zIndex: 0};
 

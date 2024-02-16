@@ -218,7 +218,7 @@ def spin_json_view(request, event_id, token_number):
                 error = False
                 message = "Already updated"
 
-            # obj.status = "completed"
+            obj.status = "completed"
             obj.spun_on = timezone.now()
             obj.save()
 
