@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load core_tags %}
+
+{% block subtitle %}
+    Event {{ object.event }} Results
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <p>
+                <a href="{% url 'admins:event-detail' event.id %}">
+                    <i class="fa fa-arrow-left"></i> back to {{ event.name }}
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-2">
+                <div class="card-body">
+
+                    <div class="text-center">
+                        <img src="{{ form.instance.image|image_or_placeholder:"150" }}"
+                             class="rounded-circle" height="150"
+                        >
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            {% if object %}
+                                <a class="btn btn-danger" href="{% url 'admins:event-delete' object.pk %}">
+                                    <i class="fa fa-trash"></i> Remove
+                                </a>
+                            {% endif %}
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $('#id_spun_on').attr('type', 'datetime-local');
+            $('#id_event_type').addClass("form-control");
+            $('#id_status').addClass("form-control");
+        });
+    </script>
+{% endblock %}
+
+
+

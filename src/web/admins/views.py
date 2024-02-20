@@ -13,6 +13,7 @@ from django.views.generic import (
     TemplateView, ListView, DetailView, UpdateView, CreateView, DeleteView
 )
 
+from root.settings import BASE_URL
 from src.services.lucky_draw.models import Event, Participant, Result
 # from faker_data import initialization
 from src.services.users.models import User
@@ -150,6 +151,11 @@ class EventDetailView(DetailView):
     model = Event
     template_name = 'admins/event_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(EventDetailView, self).get_context_data(**kwargs)
+        context['base_url'] = BASE_URL + reverse('admins:lucky-draw-winner', kwargs={'pk': self.object.id})
+        return context
+
 
 @method_decorator(admin_decorators, name='dispatch')
 class EventDeleteView(DeleteView):
@@ -158,6 +164,24 @@ class EventDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('admins:event-list')
+
+
+""" RESULTS """
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class ResultUpdateView(UpdateView):
+    model = Result
+    fields = ['image', 'full_name']
+    template_name = 'admins/result_form.html'
+
+    def get_success_url(self):
+        return reverse('admins:event-detail', kwargs={'pk': self.object.event.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(ResultUpdateView, self).get_context_data(**kwargs)
+        context['event'] = self.object.event
+        return context
 
 
 """ LUCKY DRAW """
@@ -185,6 +209,21 @@ class LuckyDrawView(View):
         context['speed'] = int(obj.spun_speed) if obj.spun_speed else 50
         context['object'] = obj
         context['result'] = winner.token_number if winner else 0
+
+        return render(request=request, template_name=self.template_name, context=context)
+
+
+class WinnerView(View):
+    template_name = 'admins/winner.html'
+
+    def get(self, request, pk, *args, **kwargs):
+        context = {}
+
+        obj = get_object_or_404(Event.objects.filter(status__in=['completed']), pk=pk)
+        result, created = Result.objects.get_or_create(event=obj)
+
+        context['object'] = obj
+        context['result'] = result.participant.token_number if result.participant else 0
 
         return render(request=request, template_name=self.template_name, context=context)
 

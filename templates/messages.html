@@ -20,8 +20,19 @@
             {% endfor %}
         {% endif %}
 
-        function toast_message() {
-
+        function toast_message(message, message_tags) {
+            Toastify({
+                text: message,
+                className: message_tags,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true,
+                duration: 10000,
+                close: true,
+                style: {
+                    background: get_message_color(message_tags.toString()),
+                }
+            }).showToast();
         }
 
         function get_message_color(value) {
