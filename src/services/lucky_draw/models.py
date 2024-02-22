@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django_resized import ResizedImageField
 
 EVENT_TYPE_CHOICES = (
     ('private', 'Private'),
@@ -76,7 +77,10 @@ class Participant(models.Model):
 
 class Result(models.Model):
     full_name = models.CharField(max_length=100, null=True, blank=True)
-    image = models.ImageField(upload_to='results/winners/', null=True, blank=True)
+    image = ResizedImageField(
+        upload_to='results/winners/', null=True, blank=True, size=[250, 250], quality=75, force_format='PNG',
+        help_text='size of logo must be 250*250 and format must be png image file', crop=['middle', 'center']
+    )
     participant = models.ForeignKey(Participant, on_delete=models.SET_NULL, null=True, blank=True)
     event = models.OneToOneField(Event, on_delete=models.CASCADE, unique=True)
 
