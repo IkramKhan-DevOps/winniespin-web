@@ -12,7 +12,7 @@
 
 {% block only-body %}
 
-    <div class="account-pages mx-5 py-5">
+    <div class="account-pages mx-0 mx-sm-0 py-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5">
@@ -25,28 +25,76 @@
                     </div>
 
                     <div class="card text-center">
-                        <div class="card-body border shadow p-4 rounded">
 
-                            {% if object.result.image %}
-                                <img src="{{ object.result.image.url }}" height="150" width="auto"
-                                     class="rounded-circle" alt="animate-winner">
-                            {% else %}
-                                <img src="{% static 'animate.gif' %}" height="150" width="auto" alt="animate-winner">
-                            {% endif %}
-                            <div class="mt-4">
-                                {% if object.result.full_name %}
-                                	<h1>{{ object.result.full_name|check_null }}</h1>
+                        <div class="card-body shadow p-4 rounded">
+                            {% if status == 'published' %}
+
+                                <div class="row text-center justify-content-center">
+
+                                    {# DAYS #}
+                                    <div class="col-3">
+                                        <p class="mb-0">Days</p>
+                                        <h1 class="mb-0">
+                                            <b id="dd" class="text-danger">00</b>
+                                        </h1>
+                                    </div>
+
+                                    {# HOURS #}
+                                    <div class="col-3">
+                                        <p class="mb-0">Hrs</p>
+                                        <h1 class="mb-0">
+                                            <b id="hh" class="text-danger">00</b>
+                                        </h1>
+                                    </div>
+
+                                    {# MINUTES #}
+                                    <div class="col-3">
+                                        <p class="mb-0">Min</p>
+                                        <h1 class="mb-0">
+                                            <b id="mm" class="text-danger">00</b>
+                                        </h1>
+                                    </div>
+
+                                    {# SECONDS #}
+                                    <div class="col-3">
+                                        <p class="mb-0">Sec</p>
+                                        <h1 class="mb-0">
+                                            <b id="ss" class="text-danger">00</b>
+                                        </h1>
+                                    </div>
+
+                                </div>
+
+                            {% elif status == 'completed' %}
+
+                                {% if object.result.image %}
+                                    <img src="{{ object.result.image.url }}" height="150" width="auto"
+                                         class="rounded-circle" alt="animate-winner">
+                                {% else %}
+                                    <img src="{% static 'animate.gif' %}" height="150" width="auto"
+                                         alt="animate-winner">
                                 {% endif %}
-                                <h5>{{ object.result.participant.token_number }}</h5>
-                            </div>
+                                <div class="mt-4">
+                                    {% if object.result.full_name %}
+                                        <h1>{{ object.result.full_name|check_null }}</h1>
+                                    {% endif %}
+                                    <h5>
+                                        {{ object.result.participant.token_number }}
+                                    </h5>
+                                </div>
 
+                            {% endif %}
                         </div>
                     </div>
 
                     <div class="text-center">
                         <p class="small text-muted">
                             <i class="fa fa-check-circle text-success"></i>
-                            A verified winner of the event from winnie spin
+                            {% if status == 'completed' %}
+                                A verified winner of the event from winnie spin.
+                            {% else %}
+                                This event is published but not spurned yet, will be spurned when timer ends.
+                            {% endif %}
                         </p>
                     </div>
 
@@ -67,7 +115,8 @@
     <!-- App js -->
     <script src="{% static 'core/js/app.js' %}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js">
+    </script>
     <script src="{% static 'confetti.js' %}"></script>
 
 {% endblock %}
@@ -77,10 +126,46 @@
 
         $(document).ready(function () {
 
-            celebrate();
-            celebrate_sides();
+            {% if status == 'completed' %}
+                celebrate();
+                celebrate_sides();
+            {% elif status == 'published' %}
+                // Convert the date string from backend to a format parsable by JavaScript
+                {% if run_timer %}
+                    let dateString = "{{ object.spun_on|date:'M d, Y, H:i' }}";
+                    let countDownDate = new Date(dateString).getTime();
+
+                    let x = setInterval(function () {
+                        let now = new Date().getTime();
+                        let distance = countDownDate - now;
+                        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                        $("#dd").text(days);
+                        $("#hh").text(hours);
+                        $("#mm").text(minutes);
+                        $("#ss").text(seconds);
+
+                        if (distance < 0) {
+                            clearInterval(x);
+                            clearCounter();
+                        }
+                    }, 1000);
+                {% else %}
+                    clearCounter();
+                {% endif %}
+            {% endif %}
 
         });
+
+        function clearCounter() {
+            $("#dd").text('00');
+            $("#hh").text('00');
+            $("#mm").text('00');
+            $("#ss").text('00');
+        }
 
 
     </script>

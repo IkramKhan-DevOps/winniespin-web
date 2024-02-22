@@ -38,7 +38,7 @@
                     {# HEADER #}
                     <div class="text-center mt-2">
                         <img alt="logo" src="{% static 'core/images/logos/logo.png' %}" height="150"
-                             class="rounded-circle border p-1">
+                             class="rounded-circle">
                         <h3 class="mt-4 mb-0">
                             <b>{{ object.name }}</b>
                         </h3>
@@ -151,11 +151,15 @@
 
                         <div class="col-6 text-right">
                             <h5 class="mb-0">
-                                {% if object.status == 'completed' %}
-                                    <a href="{% url 'admins:lucky-draw-winner' object.id %}">
+                                {% if object.status == 'completed' or object.status == 'published' %}
+
+                                    <a href="{% url 'admins:event-result' object.id %}">
                                         <b><i class="fa fa-eye"></i> Open</b>
-                                    </a> |
-                                    <a href="{% url 'admins:event-result' object.result.id %}">
+                                    </a>
+                                {% endif %}
+                                {% if object.status == 'completed' %}
+                                    |
+                                    <a href="{% url 'admins:event-result-change' object.result.id %}">
                                         <b><i class="fa fa-edit"></i> Edit</b>
                                     </a>
                                 {% endif %}
@@ -165,6 +169,8 @@
                 </div>
 
                 <div class="card-body">
+                <input name="winner-url" id="winner-url" value="{{ base_url }}" type="url"
+                                       hidden="hidden">
                     {% if object.status == 'completed' %}
                         <div class="text-center">
                             {% if object.result.image %}
@@ -174,8 +180,6 @@
                                 <img src="{% static 'animate.gif' %}" height="150" width="auto" alt="animate-winner">
                             {% endif %}
                             <div class="mt-4">
-                                <input name="winner-url" id="winner-url" value="{{ base_url }}" type="url"
-                                       hidden="hidden">
                                 <h3>{{ object.result.full_name|check_null }}</h3>
                                 <h5>{{ object.result.participant.token_number }}</h5>
                             </div>
@@ -196,7 +200,7 @@
                     {% endif %}
                 </div>
 
-                {% if object.status == 'completed' %}
+                {% if object.status == 'completed' or object.status == 'published' %}
                     <div class="card-body border-top">
                         <div class="row">
 
@@ -211,7 +215,7 @@
                             <div class="col-6 text-center">
                                 <p class="mb-0">
                                     <button class="btn btn-light text-success" id="share-Whatsapp">
-                                        <b><i class="fa fa-phone"></i> Share on Whatsapp</b>
+                                        <b><i class="fa fa-phone"></i> Whatsapp</b>
                                     </button>
                                 </p>
                             </div>

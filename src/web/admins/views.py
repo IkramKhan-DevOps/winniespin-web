@@ -153,7 +153,7 @@ class EventDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(EventDetailView, self).get_context_data(**kwargs)
-        context['base_url'] = BASE_URL + reverse('admins:lucky-draw-winner', kwargs={'pk': self.object.id})
+        context['base_url'] = BASE_URL + reverse('admins:event-result', kwargs={'pk': self.object.id})
         return context
 
 
@@ -213,19 +213,25 @@ class LuckyDrawView(View):
         return render(request=request, template_name=self.template_name, context=context)
 
 
-class WinnerView(View):
+class EventResultsView(View):
     template_name = 'admins/winner.html'
+    context = {}
+
+    def complete_event(self, event):
+        result, created = Result.objects.get_or_create(event=event)
+        self.context['result'] = result.participant.token_number if result.participant else 0
+
+    def publish_event(self, event):
+        self.context['run_timer'] = True if event.spun_on > timezone.now() else False
 
     def get(self, request, pk, *args, **kwargs):
-        context = {}
 
-        obj = get_object_or_404(Event.objects.filter(status__in=['completed']), pk=pk)
-        result, created = Result.objects.get_or_create(event=obj)
+        obj = get_object_or_404(Event.objects.filter(status__in=['completed', 'published']), pk=pk)
+        self.complete_event(obj) if obj.status == 'completed' else self.publish_event(obj)
+        self.context['object'] = obj
+        self.context['status'] = obj.status
 
-        context['object'] = obj
-        context['result'] = result.participant.token_number if result.participant else 0
-
-        return render(request=request, template_name=self.template_name, context=context)
+        return render(request=request, template_name=self.template_name, context=self.context)
 
 
 @csrf_exempt
