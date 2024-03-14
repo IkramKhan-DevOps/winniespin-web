@@ -23,7 +23,7 @@ CSRF_TRUSTED_ORIGINS = [f'{PROTOCOL}://{host}' for host in ALLOWED_HOSTS]
 LOGOUT_REDIRECT_URL = '/accounts/cross-auth/'
 LOGIN_REDIRECT_URL = '/accounts/cross-auth/'
 GOOGLE_CALLBACK_ADDRESS = f"{BASE_URL}/accounts/google/login/callback/"
-
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
 
 ROOT_URLCONF = 'root.urls'
 AUTH_USER_MODEL = 'users.User'
