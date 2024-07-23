@@ -5,46 +5,11 @@
 </p>
 <hr>
 
-# PROJECT NAME 😕
+# LuckyDraw 😕
 
-_application tagline here_
+_Make your draws easy-anywhere_
 
-application detailed down description here
-
-# Applications
-
-1. Website
-2. Administration
-3. Staff Management
-4. Root Administration
-
-# Tools and Technologies
-
-
-| Category  | Tools and technologies                        |
-| --------- | --------------------------------------------- |
-| Frontend  | Html, Css, Javascript, JQuery, Ajax, Jinja    |
-| Backend   | Django, Django-Rest-Framework``               |
-| Databases | SQLite, PostGre                               |
-| Server    | Linux based ubuntu server (aws/digital ocean) |
-
-# Development Phases
-
-1. [ ]  Application requirement engineering
-2. [ ]  Application design, theme and prototyping
-3. [ ]  Application core requirements implementation phase - 1 (core)
-4. [ ]  Application core requirements implementation phase - 2 (api and other external services)
-5. [ ]  Application core requirements implementation phase - 3 (integrations)
-6. [ ]  Application testing, optimization and security checks
-7. [ ]  Application Deployment
-
-# Modules
-
-1. [ ]  Authentication and Authorization
-2. [ ]  Access and Permission Control System
-3. [ ]  Notification Alerts and POP-ups
-
----
+An easy-to-use, efficient, and versatile platform for managing and conducting lucky draws seamlessly.
 
 # HOW TO RUN
 
